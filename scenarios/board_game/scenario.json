@@ -1,0 +1,229 @@
+[
+    {
+        "name": "start_screen",
+        "background": ["backgrounds/slide1.png"],
+        "buttons": [
+            {
+                "name": "start_button",
+                "bbox": [28.8, 18.66, 25.8, 11],
+                "timer": 1000,
+                "press_up_image": "images/press_up_btn.png",
+                "press_down_image": "images/press_down_btn.png",
+                "action": "NEXT"
+            }
+        ]
+    },
+    {
+        "name": "player_count_select",
+        "background": ["backgrounds/slide3.png"],
+        "images": [
+            {
+                "name": "player1_indicator",
+                "path": "images/player1.png",
+                "press_down_image": "images/player1_down.png",
+                "bbox": [38.5, 32, 6, 10],
+                "angle": 0,
+                "visible": true,
+                "state": "player1_ready"
+            },
+            {
+                "name": "player2_indicator",
+                "path": "images/player2.png",
+                "press_down_image": "images/player2_down.png",
+                "bbox": [5.3, 20.5, 10, 6],
+                "angle": 0,
+                "visible": true,
+                "state": "player2_ready"
+            },
+            {
+                "name": "player3_indicator",
+                "path": "images/player3.png",
+                "press_down_image": "images/player3_down.png",
+                "bbox": [38.5, 5.5, 6, 10],
+                "angle": 0,
+                "visible": true,
+                "state": "player3_ready"
+            },
+            {
+                "name": "player4_indicator",
+                "path": "images/player4.png",
+                "press_down_image": "images/player4_down.png",
+                "bbox": [69, 20.5, 10, 6],
+                "angle": 0,
+                "visible": true,
+                "state": "player4_ready"
+            }
+        ],
+        "detections": [
+            {
+                "name": "player1_zone",
+                "bbox": [38.5, 32, 6, 10],
+                "timer": 1000,
+                "class": 12,
+                "completion_event": "player1_ready",
+                "highlight_color": [0, 255, 0]
+            },
+            {
+                "name": "player2_zone",
+                "bbox": [5.3, 20.5, 10, 6],
+                "timer": 1000,
+                "class": 10,
+                "completion_event": "player2_ready",
+                "highlight_color": [0, 255, 0]
+            },
+            {
+                "name": "player3_zone",
+                "bbox": [38.5, 5.5, 6, 10],
+                "timer": 1000,
+                "class": 0,
+                "completion_event": "player3_ready",
+                "highlight_color": [0, 255, 0]
+            },
+            {
+                "name": "player4_zone",
+                "bbox": [69, 20.5, 10, 6],
+                "timer": 1000,
+                "class": 11,
+                "completion_event": "player4_ready",
+                "highlight_color": [0, 255, 0]
+            }
+        ],
+        "completion_events": [
+            "player1_ready",
+            "player2_ready",
+            "player3_ready",
+            "player4_ready"
+        ]
+    },
+    {
+        "name": "rps_start",
+        "background": ["backgrounds/slide5.PNG"],
+        "texts": [
+            {
+                "name": "rps_start_text",
+                "text": "가위바위보를 시작하겠습니다",
+                "position": [42.15, 23.7],
+                "align": "center",
+                "size": 4.5,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["delay:2000"]
+    },
+    {
+        "name": "rps_countdown_3",
+        "background": ["backgrounds/slide5.PNG"],
+        "texts": [
+            {
+                "name": "countdown_3",
+                "text": "3",
+                "position": [42.15, 23.7],
+                "align": "center",
+                "size": 12,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["delay:1000"]
+    },
+    {
+        "name": "rps_countdown_2",
+        "background": ["backgrounds/slide5.PNG"],
+        "texts": [
+            {
+                "name": "countdown_2",
+                "text": "2",
+                "position": [42.15, 23.7],
+                "align": "center",
+                "size": 12,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["delay:1000"]
+    },
+    {
+        "name": "rps_countdown_1",
+        "background": ["backgrounds/slide5.PNG"],
+        "texts": [
+            {
+                "name": "countdown_1",
+                "text": "1",
+                "position": [42.15, 23.7],
+                "align": "center",
+                "size": 12,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["delay:1000"]
+    },
+    {
+        "name": "rps_detection",
+        "background": ["backgrounds/slide5.PNG"],
+        "completion_events": [
+            "player1_rps_detected",
+            "player2_rps_detected",
+            "player3_rps_detected",
+            "player4_rps_detected"
+        ]
+    },
+    {
+        "name": "rps_check_result",
+        "background": ["backgrounds/slide5.PNG"],
+        "texts": [
+            {
+                "name": "checking_text",
+                "text": "결과를 확인 중입니다",
+                "position": [42.15, 23.7],
+                "align": "center",
+                "size": 4.5,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["delay:1500"]
+    },
+    {
+        "name": "rps_tie",
+        "background": ["backgrounds/slide5.PNG"],
+        "texts": [
+            {
+                "name": "tie_text",
+                "text": "비겼습니다.\n다시 시작하겠습니다",
+                "position": [42.15, 23.7],
+                "align": "center",
+                "size": 4.5,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["delay:2000"],
+        "buttons": [
+            {
+                "name": "restart_rps",
+                "bbox": [0, 0, 1, 1],
+                "timer": 100,
+                "action": "rps_countdown_3"
+            }
+        ]
+    },
+    {
+        "name": "rps_winner",
+        "background": ["backgrounds/slide5.PNG"],
+        "texts": [
+            {
+                "name": "winner_text",
+                "text": "Winner: Player 1",
+                "position": [42.15, 15],
+                "align": "center",
+                "size": 6,
+                "color": [255, 255, 0]
+            },
+            {
+                "name": "order_text",
+                "text": "1  2  3  4",
+                "position": [42.15, 32],
+                "align": "center",
+                "size": 4,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["delay:3000"]
+    }
+]

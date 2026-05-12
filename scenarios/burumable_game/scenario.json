@@ -1,0 +1,206 @@
+[
+    {
+        "name": "game_start",
+        "background": "backgrounds/brumabl_board.png",
+        "guide_sound": "sounds/welcome.mp3",
+        "buttons": [
+            {
+                "name": "start_button",
+                "bbox": [40, 45, 20, 10],
+                "timer": 1000,
+                "completion_event": "game_started",
+                "press_down_image": "images/button_start_pressed.png",
+                "press_down_sound": "sounds/button_click.mp3"
+            },
+            {
+                "name": "rules_button",
+                "bbox": [70, 45, 20, 10],
+                "timer": 1000,
+                "completion_event": "rules_shown",
+                "press_down_image": "images/button_rules_pressed.png"
+            }
+        ],
+        "images": [
+            {
+                "name": "title",
+                "path": "images/brumabl_title.png",
+                "bbox": [35, 10, 30, 15],
+                "angle": 0
+            }
+        ],
+        "completion_events": ["game_started"]
+    },
+    {
+        "name": "player_setup",
+        "background": "backgrounds/player_setup.png",
+        "guide_sound": "sounds/select_players.mp3",
+        "buttons": [
+            {
+                "name": "player_2",
+                "bbox": [30, 35, 15, 8],
+                "timer": 1000,
+                "completion_event": "players_selected",
+                "press_down_sound": "sounds/button_click.mp3"
+            },
+            {
+                "name": "player_3",
+                "bbox": [50, 35, 15, 8],
+                "timer": 1000,
+                "completion_event": "players_selected",
+                "press_down_sound": "sounds/button_click.mp3"
+            },
+            {
+                "name": "player_4",
+                "bbox": [70, 35, 15, 8],
+                "timer": 1000,
+                "completion_event": "players_selected",
+                "press_down_sound": "sounds/button_click.mp3"
+            }
+        ],
+        "texts": [
+            {
+                "name": "title_text",
+                "text": "플레이어 수를 선택하세요",
+                "position": [50, 15],
+                "align": "center",
+                "size": 3,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["players_selected"]
+    },
+    {
+        "name": "dice_roll",
+        "background": "backgrounds/brumabl_board.png",
+        "guide_sound": "sounds/roll_dice_guide.mp3",
+        "buttons": [
+            {
+                "name": "dice_button",
+                "bbox": [45, 45, 10, 10],
+                "timer": 1000,
+                "completion_event": "dice_rolled",
+                "press_down_image": "images/dice_button_pressed.png",
+                "press_down_sound": "sounds/dice_roll_sound.mp3"
+            }
+        ],
+        "images": [
+            {
+                "name": "dice_display",
+                "path": "images/dice_1.png",
+                "bbox": [45, 30, 10, 10],
+                "angle": 0,
+                "display_delay": 500
+            }
+        ],
+        "texts": [
+            {
+                "name": "instruction",
+                "text": "주사위를 굴려주세요",
+                "position": [50, 15],
+                "align": "center",
+                "size": 2.5,
+                "color": [255, 255, 255]
+            }
+        ],
+        "detections": [
+            {
+                "name": "dice_detection",
+                "bbox": [40, 25, 20, 20],
+                "timer": 1000,
+                "class": "dice",
+                "completion_event": "dice_detected"
+            }
+        ],
+        "completion_events": ["dice_rolled"]
+    },
+    {
+        "name": "player_move",
+        "background": "backgrounds/brumabl_board.png",
+        "guide_sound": "sounds/player_moving.mp3",
+        "detections": [
+            {
+                "name": "game_piece_detection",
+                "bbox": [45, 45, 10, 10],
+                "timer": 500,
+                "class": "game_piece",
+                "completion_event": "piece_moved"
+            }
+        ],
+        "images": [
+            {
+                "name": "piece_indicator",
+                "path": "images/current_position_marker.png",
+                "bbox": [45, 45, 10, 10],
+                "display_delay": 1000
+            }
+        ],
+        "completion_events": ["piece_moved", "delay:2000"]
+    },
+    {
+        "name": "property_selection",
+        "background": "backgrounds/brumabl_board.png",
+        "guide_sound": "sounds/property_purchase_guide.mp3",
+        "buttons": [
+            {
+                "name": "buy_button",
+                "bbox": [35, 40, 15, 8],
+                "timer": 1000,
+                "completion_event": "purchase_decision",
+                "press_down_image": "images/button_buy_pressed.png",
+                "press_down_sound": "sounds/button_click.mp3"
+            },
+            {
+                "name": "skip_button",
+                "bbox": [60, 40, 15, 8],
+                "timer": 1000,
+                "completion_event": "purchase_decision",
+                "press_down_image": "images/button_skip_pressed.png",
+                "press_down_sound": "sounds/button_click.mp3"
+            }
+        ],
+        "texts": [
+            {
+                "name": "property_info",
+                "text": "부동산을 구매하시겠습니까?",
+                "position": [50, 15],
+                "align": "center",
+                "size": 2.5,
+                "color": [255, 255, 255]
+            }
+        ],
+        "completion_events": ["purchase_decision"]
+    },
+    {
+        "name": "game_end",
+        "background": "backgrounds/game_end.png",
+        "guide_sound": "sounds/game_end_message.mp3",
+        "buttons": [
+            {
+                "name": "restart_button",
+                "bbox": [35, 45, 15, 8],
+                "timer": 1000,
+                "completion_event": "game_restart",
+                "press_down_sound": "sounds/button_click.mp3",
+                "action": "RESTART"
+            },
+            {
+                "name": "exit_button",
+                "bbox": [60, 45, 15, 8],
+                "timer": 1000,
+                "press_down_sound": "sounds/button_click.mp3",
+                "action": "NEXT"
+            }
+        ],
+        "texts": [
+            {
+                "name": "winner_announcement",
+                "text": "게임이 종료되었습니다!",
+                "position": [50, 20],
+                "align": "center",
+                "size": 3,
+                "color": [255, 255, 0]
+            }
+        ],
+        "completion_events": ["delay:5000"]
+    }
+]
