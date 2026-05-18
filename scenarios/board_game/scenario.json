@@ -158,6 +158,36 @@
     {
         "name": "rps_detection",
         "background": ["backgrounds/slide5.PNG"],
+        "images": [
+            {
+                "name": "rps_hand_player1",
+                "path": "images/player1.png",
+                "bbox": [38.5, 32, 6, 10],
+                "angle": 0,
+                "visible": false
+            },
+            {
+                "name": "rps_hand_player2",
+                "path": "images/player2.png",
+                "bbox": [5.3, 20.5, 10, 6],
+                "angle": 0,
+                "visible": false
+            },
+            {
+                "name": "rps_hand_player3",
+                "path": "images/player3.png",
+                "bbox": [38.5, 5.5, 6, 10],
+                "angle": 0,
+                "visible": false
+            },
+            {
+                "name": "rps_hand_player4",
+                "path": "images/player4.png",
+                "bbox": [69, 20.5, 10, 6],
+                "angle": 0,
+                "visible": false
+            }
+        ],
         "completion_events": [
             "player1_rps_detected",
             "player2_rps_detected",
@@ -186,22 +216,14 @@
         "texts": [
             {
                 "name": "tie_text",
-                "text": "비겼습니다.\n다시 시작하겠습니다",
+                "text": "비겼습니다. 다시 시작하겠습니다.",
                 "position": [42.15, 23.7],
                 "align": "center",
                 "size": 4.5,
                 "color": [255, 255, 255]
             }
         ],
-        "completion_events": ["delay:2000"],
-        "buttons": [
-            {
-                "name": "restart_rps",
-                "bbox": [0, 0, 1, 1],
-                "timer": 100,
-                "action": "rps_countdown_3"
-            }
-        ]
+        "completion_events": ["delay:2000"]
     },
     {
         "name": "rps_winner",

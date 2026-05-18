@@ -34,6 +34,13 @@ import utils.path_utils as path
 import utils.rps_game as rps_game
 
 class Scenario:
+    RPS_PLAYERS = ["player1", "player2", "player3", "player4"]
+    RPS_HAND_IMAGE_BY_GESTURE = {
+        "scissors": "images/가위.png",
+        "rock": "images/바위.png",
+        "paper": "images/보.png",
+    }
+
     def __init__(self, client: "SULIVAN_Client", scenario_name, start_time=None):
         self._client = client
         self.name = scenario_name
@@ -141,10 +148,7 @@ class Scenario:
         self.train_recorder = TrainRecorder(self)
 
         # ----------- RPS(가위바위보)용 임시 상태 변수 -----------
-        self.rps_player_gesture = {}   # ex: {"player1": "rock", ...}
-        self.rps_processed = False
-        self.rps_result = None
-        self.next_rps_step = None
+        self._reset_rps_state()
 
     def getRunningState(self):
         return self.running_state
@@ -271,14 +275,23 @@ class Scenario:
         step_name = step_data.get('name', '')
         
         ### ====== 가위바위보 제스처 기반 판정 ======
+        if step_name == "rps_start":
+            self._reset_rps_state()
+
         if step_name == "rps_detection":
             player_gestures = self._client.get_players_rps_gesture()  # ex: {"player1": "rock", ...}
-            for pkey in ["player1", "player2", "player3", "player4"]:
+            for pkey in self.RPS_PLAYERS:
+                if pkey not in self.rps_active_players:
+                    ce = f"{pkey}_rps_detected"
+                    logger.debug(f"Skipping inactive player {pkey}: auto-completing RPS detection event")
+                    self.achieveCompletionEvent(ce)
+                    continue
                 if pkey in player_gestures and pkey not in self.rps_player_gesture:
                     self.rps_player_gesture[pkey] = player_gestures[pkey]
                     ce = f"{pkey}_rps_detected"
                     self.achieveCompletionEvent(ce)
-            if len(self.rps_player_gesture) == 4 and not self.rps_processed:
+            self._update_rps_hand_images()
+            if len(self.rps_player_gesture) == len(self.rps_active_players) and not self.rps_processed:
                 self.rps_result = rps_game.determine_rps_winner(self.rps_player_gesture)
                 self.rps_processed = True
         if step_name == "rps_check_result" and self.rps_processed:
@@ -287,10 +300,20 @@ class Scenario:
                 self.rps_player_gesture = {}
                 self.rps_processed = False
             else:
-                self.next_rps_step = "rps_winner"
+                losers = set(self.rps_result.get("losers", []))
+                self.rps_active_players = [
+                    player for player in self.rps_active_players if player not in losers
+                ]
+                if len(self.rps_active_players) <= 1:
+                    self.next_rps_step = "rps_winner"
+                else:
+                    self.next_rps_step = "rps_countdown_3"
+                self.rps_player_gesture = {}
+                self.rps_processed = False
         if step_name == "rps_tie":
             self.rps_player_gesture = {}
             self.rps_processed = False
+            self.next_rps_step = "rps_countdown_3"
         if step_name == "rps_winner":
             pass  # 화면 출력은 client.py 등에서
 
@@ -340,7 +363,7 @@ class Scenario:
                 is_all_conds_completed = False
         if len(self.completion_events) > 0 and is_all_conds_completed:
             self.recordAction("All conditions achieved.")
-            if step_name == "rps_check_result" and self.next_rps_step:
+            if step_name in {"rps_check_result", "rps_tie"} and self.next_rps_step:
                 self.changeStep(self.getIndex(self.next_rps_step))
             else:
                 self.goToNextStep()
@@ -359,6 +382,44 @@ class Scenario:
             return False
         text_object.setText(new_text)
         return True
+
+    def _update_rps_hand_images(self):
+        for player in self.RPS_PLAYERS:
+            image_obj = self.images.get(f"rps_hand_{player}")
+            if image_obj is None:
+                continue
+
+            if player not in self.rps_active_players:
+                image_obj.set_visible(False)
+                continue
+
+            gesture = self.rps_player_gesture.get(player)
+            if gesture is None:
+                image_obj.set_visible(False)
+                continue
+
+            image_path = self.RPS_HAND_IMAGE_BY_GESTURE.get(gesture)
+            if image_path is None:
+                image_obj.set_visible(False)
+                continue
+
+            try:
+                resolved_path = self.path_util.getPath(image_path)
+            except FileNotFoundError:
+                image_obj.set_visible(False)
+                continue
+
+            if image_obj.image_path != image_path:
+                image_obj.set_image(image_path)
+
+            image_obj.set_visible(True)
+
+    def _reset_rps_state(self):
+        self.rps_active_players = self.RPS_PLAYERS.copy()
+        self.rps_player_gesture = {}
+        self.rps_processed = False
+        self.rps_result = None
+        self.next_rps_step = None
 
     def restart(self, step=None):
         self._client.restartScenario()
