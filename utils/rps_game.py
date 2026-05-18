@@ -35,7 +35,7 @@ def determine_rps_winner(player_moves):
     elif move_set == {"paper", "rock"}:
         win_move = "paper"
     else:
-        # 예외 fallback (사실상 발생X)
+        # 예외 fallback (발생하지 않음)
         return {
             'winner': None,
             'winners': [],
@@ -44,32 +44,11 @@ def determine_rps_winner(player_moves):
             'is_tie': True
         }
 
-    # (3) 두 가지 손만 나온 경우 2:2는 무승부
-    move_counts = {move: moves.count(move) for move in move_set}
-    if len(move_set) == 2 and len(set(move_counts.values())) == 1:
-        return {
-            'winner': None,
-            'winners': [],
-            'losers': [],
-            'order': players,
-            'is_tie': True
-        }
-
-    # (4) 승리/패배 플레이어 추출
+    # (3) 승리/패배 플레이어 추출
     winners = [k for k, v in player_moves.items() if v == win_move]
     losers = [k for k in players if k not in winners]
     order = winners + losers
     winner = winners[0] if winners else None
-
-    # 승/패 그룹이 명확히 갈리지 않으면 비김 처리
-    if not winners or not losers:
-        return {
-            'winner': None,
-            'winners': [],
-            'losers': [],
-            'order': players,
-            'is_tie': True
-        }
 
     return {
         'winner': winner,

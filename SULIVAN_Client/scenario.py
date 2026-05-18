@@ -283,8 +283,7 @@ class Scenario:
             for pkey in self.RPS_PLAYERS:
                 if pkey not in self.rps_active_players:
                     ce = f"{pkey}_rps_detected"
-                    if ce in self.completion_events and not self.completion_events[ce]:
-                        logger.debug(f"Skip RPS detection for inactive player: {pkey}")
+                    logger.debug(f"Skipping inactive player {pkey}: auto-completing RPS detection event")
                     self.achieveCompletionEvent(ce)
                     continue
                 if pkey in player_gestures and pkey not in self.rps_player_gesture:
