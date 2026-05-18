@@ -148,11 +148,7 @@ class Scenario:
         self.train_recorder = TrainRecorder(self)
 
         # ----------- RPS(가위바위보)용 임시 상태 변수 -----------
-        self.rps_player_gesture = {}   # ex: {"player1": "rock", ...}
-        self.rps_processed = False
-        self.rps_result = None
-        self.next_rps_step = None
-        self.rps_active_players = self.RPS_PLAYERS.copy()
+        self._reset_rps_state()
 
     def getRunningState(self):
         return self.running_state
@@ -280,17 +276,16 @@ class Scenario:
         
         ### ====== 가위바위보 제스처 기반 판정 ======
         if step_name == "rps_start":
-            self.rps_active_players = self.RPS_PLAYERS.copy()
-            self.rps_player_gesture = {}
-            self.rps_processed = False
-            self.rps_result = None
-            self.next_rps_step = None
+            self._reset_rps_state()
 
         if step_name == "rps_detection":
             player_gestures = self._client.get_players_rps_gesture()  # ex: {"player1": "rock", ...}
             for pkey in self.RPS_PLAYERS:
                 if pkey not in self.rps_active_players:
-                    self.achieveCompletionEvent(f"{pkey}_rps_detected")
+                    ce = f"{pkey}_rps_detected"
+                    if ce in self.completion_events and not self.completion_events[ce]:
+                        logger.debug(f"Skip RPS detection for inactive player: {pkey}")
+                    self.achieveCompletionEvent(ce)
                     continue
                 if pkey in player_gestures and pkey not in self.rps_player_gesture:
                     self.rps_player_gesture[pkey] = player_gestures[pkey]
@@ -415,10 +410,17 @@ class Scenario:
                 image_obj.set_visible(False)
                 continue
 
-            if image_obj.image_path != image_path and os.path.isfile(resolved_path):
+            if image_obj.image_path != image_path:
                 image_obj.set_image(image_path)
 
             image_obj.set_visible(True)
+
+    def _reset_rps_state(self):
+        self.rps_active_players = self.RPS_PLAYERS.copy()
+        self.rps_player_gesture = {}
+        self.rps_processed = False
+        self.rps_result = None
+        self.next_rps_step = None
 
     def restart(self, step=None):
         self._client.restartScenario()
